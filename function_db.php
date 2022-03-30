@@ -35,6 +35,39 @@ function getAllFood()
 	return $results;
 }
 
+function addUser($name)
+{
+	// db handler
+	global $db;
+
+	// write sql
+	// insert into friends values('someone', 'cs', 4)";
+//	$query = "insert into friends values('" . $name . "', '" . $major . "'," . $year . ")";
+	$query = "insert into users (name) values (:name)";
+	echo "a";
+	// execute the sql
+//	$statement = $db->query($query);   // query() will compile and execute the sql
+    $statement = $db->prepare($query);
+    $statement->bindValue(':name',$name);
+    $statement->execute();
+	// release; free the connection to the server so other sql statements may be issued
+	$statement->closeCursor();
+}
+
+function getAllUsers()
+{
+	global $db;
+	$query = "select * from users";
+	$statement = $db->query($query);     // 16-Mar, stopped here, still need to fetch and return the result
+
+	// fetchAll() returns an array of all rows in the result set
+	$results = $statement->fetchAll();
+
+	$statement->closeCursor();
+
+	return $results;
+}
+
 //function getFriend_byName($name){
 //    global $db;
 //    $query = "select * from friends where name = :name";
