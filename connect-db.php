@@ -41,8 +41,8 @@
  $username = 'jl8wf';
  $password = 'Steins_gate0';
  $host = 'mysql01.cs.virginia.edu';
- $dbname = 'jl8wf';
- $dsn = "mysql:host=mysql01.cs.virginia.edu;dbname=jl8wf";
+ $dbname = 'jl8wf_b';
+ $dsn = "mysql:host=mysql01.cs.virginia.edu;dbname=jl8wf_b";
 
 ////////////////////////////////////////////
 

@@ -2,34 +2,34 @@
 require('connect-db.php');
 // include('connect-db.php');
 
-require('friend_db.php');
+require('food_db.php');
 
-$list_of_friends = getAllFriends();
-$friend_to_update = NULL;
-$friend_to_delete = NULL;
+$list_of_foods = getAllFood();
+//$friend_to_update = NULL;
+//$friend_to_delete = NULL;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
     {
-        addFriend($_POST['name'], $_POST['major'], $_POST['year']);
-        $list_of_friends = getAllFriends();
+        addFood($_POST['item_type'], $_POST['price'], $_POST['brand']);
+        $list_of_foods = getAllFood();
     }
-    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
-    {
-//
-        $friend_to_update = getFriend_byName($_POST['friend_to_update']);
-//        echo "Update " . $friend_to_update;
-//        updateFriend();
-    }
-    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
-        deleteFriend($_POST['friend_to_delete']);
-        $list_of_friends = getAllFriends();
-    }
-    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Confirm Update")
-    {
-        updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
-        $list_of_friends = getAllFriends();
-    }
+//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
+//    {
+////
+//        $friend_to_update = getFriend_byName($_POST['friend_to_update']);
+////        echo "Update " . $friend_to_update;
+////        updateFriend();
+//    }
+//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
+//        deleteFriend($_POST['friend_to_delete']);
+//        $list_of_friends = getAllFriends();
+//    }
+//    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Confirm Update")
+//    {
+//        updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
+//        $list_of_friends = getAllFriends();
+//    }
 
 }
 ?>
@@ -81,20 +81,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 <body>
 <div class="container">
-  <h1>Friend book</h1>
+  <h1>Food directory</h1>
 
   <form name="mainForm" action="simpleform.php" method="post">
   <div class="row mb-3 mx-3">
-    Name:
-    <input type="text" class="form-control" name="name" required value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/>
+    Item_type:
+    <input type="text" class="form-control" name="item_type" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
   </div>
   <div class="row mb-3 mx-3">
-    Year:
-    <input type="number" class="form-control" name="year" required min="1" max="4" value = "<?php if($friend_to_update!=null) echo $friend_to_update['year']?>"/>
+    Price:
+    <input type="number" class="form-control" name="price" required min="1" max="1000000"/> <!-- //value = "<?php if($friend_to_update!=null) echo $friend_to_update['year']?>"/> -->
   </div>
   <div class="row mb-3 mx-3">
-    Major:
-    <input type="text" class="form-control" name="major" required value = "<?php if($friend_to_update!=null) echo $friend_to_update['major']?>"/>
+    Brand:
+    <input type="text" class="form-control" name="brand" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['major']?>"/> -->
   </div>
   <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
         title="insert a friend" />
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 </form>
 
 <hr/>
-<h2>List of Friends</h2>
+<h2>List of Food</h2>
 <!-- <div class="row justify-content-center">   -->
 <table class="w3-table w3-bordered w3-card-4" style="width:90%">
   <thead>
@@ -115,21 +115,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <th width="12%">Delete ?</th>
   </tr>
   </thead>
-  <?php foreach ($list_of_friends as $friend):  ?>
+  <?php foreach ($list_of_foods as $food):  ?>
   <tr>
-    <td><?php echo $friend['name']; ?></td>
-    <td><?php echo $friend['major']; ?></td>
-    <td><?php echo $friend['year']; ?></td>
+    <td><?php echo $food['item_type']; ?></td>
+    <td><?php echo $food['price']; ?></td>
+    <td><?php echo $food['brand']; ?></td>
     <td>
         <form action = "simpleform.php" method = "POST">
             <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
-            <input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
+            //<input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
         </form>
     </td>
     <td>
         <form action = "simpleform.php" method = "POST">
             <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
-            <input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
+            //<input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
         </form>
     </td>
   </tr>
