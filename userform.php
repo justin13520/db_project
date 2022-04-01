@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 </form>
 
 <hr/>
-<h2>List of Food</h2>
+<h2>List of Users</h2>
 <!-- <div class="row justify-content-center">   -->
 <table class="w3-table w3-bordered w3-card-4" style="width:90%">
   <thead>
