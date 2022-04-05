@@ -1,3 +1,8 @@
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<meta name="google-signin-client_id" content="624168443480-alor55af0q15l98l07c7u0rsc5fkep7t.apps.googleusercontent.com">
+
+<!-- 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 -->
 <?php
 require('connect-db.php');
 // include('connect-db.php');
@@ -32,9 +37,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 //    }
 
 }
+
 ?>
 
+<script>
+  function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    <?php echo "tomato" ?>
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  }
+</script>
 
+<a href="#" onclick="signOut();">Sign out</a>
+<script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
@@ -82,6 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>
 <div class="container">
   <h1>User Creation</h1>
+  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+
 
   <form name="mainForm" action="userform.php" method="post">
   <div class="row mb-3 mx-3">
@@ -93,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 </form>
 
 <hr/>
-<h2>List of Food</h2>
+<h2>List of users</h2>
 <!-- <div class="row justify-content-center">   -->
 <table class="w3-table w3-bordered w3-card-4" style="width:90%">
   <thead>

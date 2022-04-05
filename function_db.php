@@ -35,7 +35,7 @@ function getAllFood()
 	return $results;
 }
 
-function addUser($name)
+function addUser($name,$email,$google_id,$profile_image)
 {
 	// db handler
 	global $db;
@@ -43,12 +43,16 @@ function addUser($name)
 	// write sql
 	// insert into friends values('someone', 'cs', 4)";
 //	$query = "insert into friends values('" . $name . "', '" . $major . "'," . $year . ")";
-	$query = "insert into users (name) values (:name)";
-	echo "a";
+	$query = "insert into users (name,email,google_id,profile_image) values (:name,:email,:google_id,:profile_image)";
+
 	// execute the sql
 //	$statement = $db->query($query);   // query() will compile and execute the sql
+	echo "why not?";
     $statement = $db->prepare($query);
     $statement->bindValue(':name',$name);
+	$statement->bindValue(':email',$email);
+	$statement->bindValue(':google_id',$google_id);
+	$statement->bindValue(':profile_image',$profile_image);
     $statement->execute();
 	// release; free the connection to the server so other sql statements may be issued
 	$statement->closeCursor();
@@ -106,4 +110,14 @@ function getAllUsers()
 //    $statement->closeCursor();
 //    return $result;
 //}
-//?>
+//
+
+
+
+
+
+
+
+
+
+?>

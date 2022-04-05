@@ -1,5 +1,5 @@
 <?php
-require('connect-db.php');
+require('connect_db.php');
 // include('connect-db.php');
 
 require('function_db.php');
@@ -123,13 +123,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <td>
         <form action = "simpleform.php" method = "POST">
             <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
-            //<input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
+            <input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
         </form>
     </td>
     <td>
         <form action = "simpleform.php" method = "POST">
             <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
-            //<input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
+            <input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
         </form>
     </td>
   </tr>
