@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 <body>
 <div class="container">
+  <a href="index.php">Go back to home page</a>
   <h1>Food directory</h1>
 
   <form name="mainForm" action="simpleform.php" method="post">

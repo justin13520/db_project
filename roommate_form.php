@@ -4,38 +4,20 @@
 
 <!-- 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 -->
 <?php
-require('connect-db.php');
+require('connect_db.php');
 // include('connect-db.php');
 
 require('function_db.php');
 
-$list_of_users = getAllUsers();
+$list_of_users = getAllRoommateGroups();
 //$friend_to_update = NULL;
 //$friend_to_delete = NULL;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
     {
-        addUser($_POST['name']);
-        $list_of_users = getAllUsers();
+        $list_of_users = getAllRoommateGroups();
     }
-//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
-//    {
-////
-//        $friend_to_update = getFriend_byName($_POST['friend_to_update']);
-////        echo "Update " . $friend_to_update;
-////        updateFriend();
-//    }
-//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
-//        deleteFriend($_POST['friend_to_delete']);
-//        $list_of_friends = getAllFriends();
-//    }
-//    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Confirm Update")
-//    {
-//        updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
-//        $list_of_friends = getAllFriends();
-//    }
-
 }
 
 ?>
@@ -111,17 +93,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
 
-  <form name="mainForm" action="userform.php" method="post">
+<form name="mainForm" action="userform.php" method="post">
   <div class="row mb-3 mx-3">
     Name:
-    <input type="text" class="form-control" name="name" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
+    <input type="text" class="form-control" name="name" required/>
+  </div>
+  <div class="row mb-3 mx-3">
+    Group Name:
+    <input type="text" class="form-control" name="name" required/>
     <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
         title="insert a friend" />
   </div>
 </form>
 
 <hr/>
-<h2>List of users</h2>
+<h2>List of Roommate Groups</h2>
 <!-- <div class="row justify-content-center">   -->
 <table class="w3-table w3-bordered w3-card-4" style="width:90%">
   <thead>
@@ -135,13 +121,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <tr>
     <td><?php echo $user['name']; ?></td>
     <td>
-        <form action = "userform.php" method = "POST">
+        <form action = "roommate_form.php" method = "POST">
             <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
             <!--<input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>-->
         </form>
     </td>
     <td>
-        <form action = "userform.php" method = "POST">
+        <form action = "roommate_form.php" method = "POST">
             <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
             <!--//<input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>-->
         </form>

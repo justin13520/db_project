@@ -58,10 +58,10 @@ function addUser($name,$email,$google_id,$profile_image)
 	$statement->closeCursor();
 }
 
-function getAllUsers()
+function getAllRoommateGroups()
 {
 	global $db;
-	$query = "select * from users";
+	$query = "select * from roommates";
 	$statement = $db->query($query);     // 16-Mar, stopped here, still need to fetch and return the result
 
 	// fetchAll() returns an array of all rows in the result set
@@ -72,16 +72,16 @@ function getAllUsers()
 	return $results;
 }
 
-//function getFriend_byName($name){
-//    global $db;
-//    $query = "select * from friends where name = :name";
-//    $statement = $db->prepare($query);
-//    $statement->bindValue(':name',$name);
-//    $statement->execute();
-//    $result = $statement->fetch();
-//    $statement->closeCursor();
-//    return $result;
-//}
+function getFriend_byID($google_id){
+   global $db;
+   $query = "select COUNT(*) from users where google_id = :google_id";
+   $statement = $db->prepare($query);
+   $statement->bindValue(':google_id',$google_id);
+   $statement->execute();
+   $result = $statement->fetch();
+   $statement->closeCursor();
+   return $result;
+}
 //
 //
 //function updateFriend($name,$major,$year){
