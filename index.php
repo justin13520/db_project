@@ -47,8 +47,18 @@
   <h1>Hello World!</h1>
 
   <a href="simpleform.php">Click to add food items</a>
-  <a href="redirect.php">Click to sign up</a>
-
+  <!-- <a href="redirect.php">Click to sign up</a> -->
+  <?php
+  include("redirect.php");
+  if(!isset($_SESSION['access_token']))
+  {
+  //Create a URL to obtain user authorization
+  $login_button = '<a href="'.$client->createAuthUrl().'"><img src="sign-in-with-google.png" /></a>';
+  }
+  // else{
+  //   echo "<?php Welcome $_SESSION['access_token']" ?>;
+  // }
+  ?>
 
 
 

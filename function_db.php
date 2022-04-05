@@ -47,7 +47,7 @@ function addUser($name,$email,$google_id,$profile_image)
 
 	// execute the sql
 //	$statement = $db->query($query);   // query() will compile and execute the sql
-	echo "why not?";
+	// echo "why not?";
     $statement = $db->prepare($query);
     $statement->bindValue(':name',$name);
 	$statement->bindValue(':email',$email);
