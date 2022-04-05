@@ -43,6 +43,10 @@
 </head>
 
 <body>
+<div class="header">
+  <h1>Header</h1>
+  <p>My supercool header</p>
+</div>
 <div class="container">
   <h1>Hello World!</h1>
 
@@ -61,10 +65,9 @@
   //   echo '<a href="simpleform.php">Click to add food items</a>';
   //   echo '<a href="roommate_form.php">Click add roommates</a>';
   // }
-  
   if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SESSION['name'])) {
     echo 'Welcome, ';
-    echo $_SESSION['loggedin'];
+    echo $_SESSION['name'];
 
     echo '!<br><a href="simpleform.php">Click to add food items </a><br>';
     echo '<a href="roommate_form.php">Click add roommates</a><br>';
@@ -72,7 +75,7 @@
   } else {
     echo "Please log in first to see this page.";
     $login_button = '<a href="'.$client->createAuthUrl().'"><img src="sign-in-with-google.png" /></a>';
-    $_SESSION['loggedin'] = true;
+    // $_SESSION['loggedin'] = true;
 
   }
   ?>
