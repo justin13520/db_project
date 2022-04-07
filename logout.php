@@ -1,3 +1,5 @@
+
+
 <?php
 include('redirect.php');
 //Reset OAuth access token

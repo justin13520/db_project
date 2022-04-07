@@ -1,4 +1,6 @@
 <?php
+session_start();
+// echo session_id();
 require_once 'google_login/google-api/vendor/autoload.php';
 require('connect_db.php');
 require('function_db.php');
@@ -14,13 +16,12 @@ $client->setClientSecret($clientSecret);
 $client->setRedirectUri($redirectUri);
 $client->addScope("email");
 $client->addScope("profile");
-session_start();
 // authenticate code from Google OAuth Flow
 if (isset($_GET['code'])) {
   $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-  if(isset($token['access_token']))
-    $client->setAccessToken($token['access_token']);
-   
+  // if(isset($token['access_token']))
+  $client->setAccessToken($token['access_token']);
+ 
   // get profile info
   $google_oauth = new Google_Service_Oauth2($client);
   $google_account_info = $google_oauth->userinfo->get();
@@ -31,14 +32,15 @@ if (isset($_GET['code'])) {
   $profile_pic = $google_account_info->picture;
   $_SESSION['loggedin'] = true;
   $_SESSION['name'] = $name;
-  if(getFriend_byID($google_id) == 0){
+  $_SESSION['id'] = $google_id;
+  if(num_of_user($google_id) == 0){
     addUser($name,$email,$google_id,$profile_pic);
   }
   
-  echo "Welcome, $name!";
+  // echo "Welcome, $name!";
   // now you can use this profile info to create account in your website and make user logged in.
   }
  else {
-  echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
+  // echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
 }
 ?>

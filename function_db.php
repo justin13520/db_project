@@ -9,6 +9,7 @@ function addFood($item_type,$price,$brand)
 	// insert into friends values('someone', 'cs', 4)";
 //	$query = "insert into friends values('" . $name . "', '" . $major . "'," . $year . ")";
 	$query = "insert into grocery_items (item_type,price,brand) values (:item_type,:price,:brand)";
+	echo "why not?";
 
 	// execute the sql
 //	$statement = $db->query($query);   // query() will compile and execute the sql
@@ -47,7 +48,7 @@ function addUser($name,$email,$google_id,$profile_image)
 
 	// execute the sql
 //	$statement = $db->query($query);   // query() will compile and execute the sql
-	// echo "why not?";
+	echo "why not?";
     $statement = $db->prepare($query);
     $statement->bindValue(':name',$name);
 	$statement->bindValue(':email',$email);
@@ -61,7 +62,7 @@ function addUser($name,$email,$google_id,$profile_image)
 function getAllRoommateGroups()
 {
 	global $db;
-	$query = "select * from roommates";
+	$query = "SELECT group_name, COUNT(*) as total FROM roommates GROUP BY group_name";
 	$statement = $db->query($query);     // 16-Mar, stopped here, still need to fetch and return the result
 
 	// fetchAll() returns an array of all rows in the result set
@@ -72,9 +73,27 @@ function getAllRoommateGroups()
 	return $results;
 }
 
-function getFriend_byID($google_id){
+function makeRoommmateGroup($id,$group_name){
+	global $db;
+	echo $id;
+	echo $group_name;
+	$query = "insert into roommates (user_id,group_name,num_of_ppl) values (:user_id,:group_name,:num_of_ppl)";
+	$statement = $db->prepare($query);
+	$statement->bindValue(":user_id",$id);
+	$statement->bindValue(":group_name",$group_name);
+	$statement->bindValue(":num_of_ppl",1);
+	$statement->execute();
+	$statement->closeCursor();
+}
+
+
+function joinRoommateGroup(){
+	
+}
+
+function num_of_user($google_id){
    global $db;
-   $query = "select COUNT(*) from users where google_id = :google_id";
+   $query = "SELECT COUNT(*) FROM users where google_id = :google_id";
    $statement = $db->prepare($query);
    $statement->bindValue(':google_id',$google_id);
    $statement->execute();
@@ -112,10 +131,27 @@ function getFriend_byID($google_id){
 //}
 //
 
+function makeGL(){
+	global $db;
+	$query = "INSERT INTO grocery_list (date, num_of_items) values (:date,:num)";
+	$date = "SELECT CAST(GETDATE())";
+	$statement = $db->prepare($query);
+	$statement->bindValue(':date',$date);
+	$statement->bindValue(':num',0);
+	$statement->execute();
+	$statement->closeCursor();
+}
 
-
-
-
+function getAllGL($google_id){
+	global $db;
+	$query = "select * from grocery_list where google_id = :GL_User_ID";
+	$statement = $db->prepare($query);
+	$statement->bindValue(':GL_User_ID',$google_id);
+	$statement->execute();
+	$result = $statement->fetch();
+	$statement->closeCursor();
+	return $result;
+}
 
 
 

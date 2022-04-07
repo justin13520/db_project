@@ -1,22 +1,33 @@
-<!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
-
-<meta name="google-signin-client_id" content="624168443480-alor55af0q15l98l07c7u0rsc5fkep7t.apps.googleusercontent.com"> -->
-
-<!-- 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 -->
 <?php
 // require('connect_db.php');
-include('redirect.php');
-// require('function_db.php');
+require('redirect.php');
 
-$list_of_groups = getAllRoommateGroups();
+$list_of_foods = getAllFood();
+//$friend_to_update = NULL;
+//$friend_to_delete = NULL;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    if (!empty($_POST['AddRMGroup']) && $_POST['AddRMGroup'] == "Add")
+    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
     {
-      echo "posting";
-      makeRoommmateGroup($_SESSION['id'],$_POST['group_name']);
-      $list_of_groups = getAllRoommateGroups();
+        addFood($_POST['item_type'], $_POST['price'], $_POST['brand']);
+        $list_of_foods = getAllFood();
     }
+//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
+//    {
+////
+//        $friend_to_update = getFriend_byName($_POST['friend_to_update']);
+////        echo "Update " . $friend_to_update;
+////        updateFriend();
+//    }
+//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
+//        deleteFriend($_POST['friend_to_delete']);
+//        $list_of_friends = getAllFriends();
+//    }
+//    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Confirm Update")
+//    {
+//        updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
+//        $list_of_friends = getAllFriends();
+//    }
 }
 
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SESSION['name'])) {
@@ -32,28 +43,11 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SES
   echo "Please log in first to see this page.";
   echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
 }
+
+
 ?>
 
-  <!-- <script>
-    function onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
-      <?php echo "tomato" ?>
-      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-      console.log('Name: ' + profile.getName());
-      console.log('Image URL: ' + profile.getImageUrl());
-      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    }
-  </script>
 
-  <a href="#" onclick="signOut();">Sign out</a>
-  <script>
-    function signOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-      });
-    }
-  </script> -->
 <!-- 1. create HTML5 doctype -->
 <!DOCTYPE html>
 <html>
@@ -100,50 +94,56 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SES
 
 <body>
 <div class="container">
-  <h1>User Creation</h1>
-  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <a href="index.php">Go back to home page</a>
+  <h1>Food directory</h1>
 
-
-
-<form name="roomForm" action="roommate_form.php" method="post">
-  <!-- <div class="row mb-3 mx-3"> -->
-    <!-- Name:
-    <input type="text" class="form-control" name="name" required/>
-  </div> -->
+  <form name="mainForm" action="food.php" method="post">
   <div class="row mb-3 mx-3">
-    Group Name:
-    <input type="text" class="form-control" name="group_name" required/>
-    <input type="submit" value="Add" name="AddRMGroup" class="btn btn-dark"
-        title="make a roommate group" />
+    Item_type:
+    <input type="text" class="form-control" name="item_type" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
   </div>
+  <div class="row mb-3 mx-3">
+    Price:
+    <input type="number" class="form-control" name="price" required min="1" max="1000000"/> <!-- //value = "<?php if($friend_to_update!=null) echo $friend_to_update['year']?>"/> -->
+  </div>
+  <div class="row mb-3 mx-3">
+    Brand:
+    <input type="text" class="form-control" name="brand" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['major']?>"/> -->
+  </div>
+  <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
+        title="insert a food" />
+  <input type="submit" value="Confirm Update" name="btnAction" class="btn btn-dark"
+        title="confirm update a food" />
 </form>
 
 <hr/>
-<h2>List of Roommate Groups</h2>
-<a href="index.php">Go back to home page</a>
+<h2>List of Food</h2>
 <!-- <div class="row justify-content-center">   -->
 <table class="w3-table w3-bordered w3-card-4" style="width:90%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="25%">Name</th>
-    <th width="12%">Update ?</th>
-    <th width="12%">Delete ?</th>
+    <th width="25%">Item Name</th>
+    <th width="25%">Cost</th>
+    <th width="20%">Brand</th>
+    <th width="12%">Add to list</th>
+    <th width="12%">Delete?</th>
   </tr>
   </thead>
-  <?php foreach ($list_of_groups as $group):  ?>
+  <?php foreach ($list_of_foods as $food):  ?>
   <tr>
-    <td><?php echo $group['group_name']; ?></td>
-    <td><?php echo $group['total']; ?></td>
+    <td><?php echo $food['item_type']; ?></td>
+    <td><?php echo $food['price']; ?></td>
+    <td><?php echo $food['brand']; ?></td>
     <td>
-        <form action = "roommate_form.php" method = "POST">
-            <input type="submit" value="Join" name="btnAction" class="btn btn-primary"/>
-            <input type = "hidden" name = "join_group" value = "<?php echo $group['name']?>"/>
+        <form action = "food.php" method = "POST">
+            <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
+            <input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
         </form>
     </td>
     <td>
-        <form action = "roommate_form.php" method = "POST">
-            <input type="submit" value="Leave" name="btnAction" class="btn btn-danger"/>
-            <!--//<input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>-->
+        <form action = "food.php" method = "POST">
+            <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
+            <input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
         </form>
     </td>
   </tr>

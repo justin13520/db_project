@@ -1,18 +1,23 @@
 <?php
-require('connect_db.php');
-// include('connect-db.php');
+// session_start();
+// echo session_id();
+// require('connect_db.php');
+require('redirect.php');
 
-require('function_db.php');
+if(!isset($_SESSION['id'])){
 
-$list_of_foods = getAllFood();
+  echo "OMATO";
+}
+$id = $_SESSION['id'];
+$list_of_GL = getAllGL($id);
 //$friend_to_update = NULL;
 //$friend_to_delete = NULL;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
     {
-        addFood($_POST['item_type'], $_POST['price'], $_POST['brand']);
-        $list_of_foods = getAllFood();
+        makeGL();
+        $list_of_GL = getAllGL($_SESSION['id']);
     }
 //    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
 //    {
@@ -32,6 +37,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 //    }
 
 }
+
+    // include("redirect.php");
+
+    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SESSION['name'])) {
+      echo 'Welcome, ';
+      echo $_SESSION['name'];
+
+      echo '! <br><a href="food.php">Click to add food items      </a>';
+      echo '<a href="roommate_form.php">Click add roommates            </a>';
+      echo '<a href="grocery_lists.php">Your Grocery Lists</a>';
+      echo '<a href="logout.php">Logout</a>';
+      // session_destroy();
+    } else {
+      echo "Please log in first to see this page.";
+      echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
+    }
+
 ?>
 
 
@@ -82,9 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>
 <div class="container">
   <a href="index.php">Go back to home page</a>
-  <h1>Food directory</h1>
+  <h1>grocery_list directory</h1>
 
-  <form name="mainForm" action="simpleform.php" method="post">
+  <form name="mainForm" action="grocery_list.php" method="post">
   <div class="row mb-3 mx-3">
     Item_type:
     <input type="text" class="form-control" name="item_type" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
@@ -104,31 +126,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 </form>
 
 <hr/>
-<h2>List of Food</h2>
+<h2>List of grocery_list</h2>
 <!-- <div class="row justify-content-center">   -->
 <table class="w3-table w3-bordered w3-card-4" style="width:90%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="25%">Name</th>
-    <th width="25%">Major</th>
-    <th width="20%">Year</th>
+    <th width="25%">ID</th>
+    <th width="25%">Date</th>
+    <th width="20%">Num of Items</th>
     <th width="12%">Update ?</th>
     <th width="12%">Delete ?</th>
   </tr>
   </thead>
-  <?php foreach ($list_of_foods as $food):  ?>
+  <?php foreach ($list_of_GL as $grocery_list):  ?>
   <tr>
-    <td><?php echo $food['item_type']; ?></td>
-    <td><?php echo $food['price']; ?></td>
-    <td><?php echo $food['brand']; ?></td>
+    <td><?php echo $grocery_list['grocery_list_id']; ?></td>
+    <td><?php echo $grocery_list['date']; ?></td>
+    <td><?php echo $grocery_list['num_of_items']; ?></td>
     <td>
-        <form action = "simpleform.php" method = "POST">
+        <form action = "grocery_list.php" method = "POST">
             <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
             <input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
         </form>
     </td>
     <td>
-        <form action = "simpleform.php" method = "POST">
+        <form action = "grocery_list.php" method = "POST">
             <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
             <input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
         </form>

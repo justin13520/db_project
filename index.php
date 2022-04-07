@@ -14,10 +14,10 @@
   initial-scale=1 sets the initial zoom level when the page is first loaded
   -->
 
-  <meta name="author" content="your name">
-  <meta name="description" content="include some description about your page">
+  <meta name="author" content="Justin Liu and Khoi Pham">
+  <meta name="description" content="Database project">
 
-  <title>Bootstrap example</title>
+  <title>Home Page</title>
 
   <!-- 3. link bootstrap -->
   <!-- if you choose to use CDN for CSS bootstrap -->
@@ -44,41 +44,33 @@
 
 <body>
 <div class="header">
-  <h1>Header</h1>
+  <h1>Grocery List: A Database Project</h1>
+    <?php
+      include("redirect.php");
+
+      if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SESSION['name'])) {
+        echo 'Welcome, ';
+        echo $_SESSION['name'];
+
+        echo '! <br><a href="food.php">Click to add food items      </a>';
+        echo '<a href="roommate_form.php">Click add roommates            </a>';
+        echo '<a href="grocery_lists.php">Your Grocery Lists</a>';
+        echo '<a href="logout.php">Logout</a>';
+        // session_destroy();
+      } else {
+        echo "Please log in first to see this page.";
+        echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
+      }
+      ?>
   <p>My supercool header</p>
 </div>
 <div class="container">
   <h1>Hello World!</h1>
 
-  <!-- <a href="simpleform.php">Click to add food items</a>
+  <!-- <a href="food.php">Click to add food items</a>
   <a href="roommate_form.php">Click add roommates</a> -->
   <!-- <a href="redirect.php">Click to sign up</a> -->
-  <?php
-  include("redirect.php");
-  // if(!isset($_SESSION['access_token']))
-  // {
-  // //Create a URL to obtain user authorization
-  // $login_button = '<a href="'.$client->createAuthUrl().'"><img src="sign-in-with-google.png" /></a>';
-  // echo "LOGIN NERD";
-  // }
-  // else{
-  //   echo '<a href="simpleform.php">Click to add food items</a>';
-  //   echo '<a href="roommate_form.php">Click add roommates</a>';
-  // }
-  if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SESSION['name'])) {
-    echo 'Welcome, ';
-    echo $_SESSION['name'];
-
-    echo '!<br><a href="simpleform.php">Click to add food items </a><br>';
-    echo '<a href="roommate_form.php">Click add roommates</a><br>';
-    echo '<a href="logout.php">Logout</a><br>';
-  } else {
-    echo "Please log in first to see this page.";
-    $login_button = '<a href="'.$client->createAuthUrl().'"><img src="sign-in-with-google.png" /></a>';
-    // $_SESSION['loggedin'] = true;
-
-  }
-  ?>
+  
 
 
 
