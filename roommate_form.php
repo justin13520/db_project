@@ -1,13 +1,8 @@
-<!-- <script src="https://apis.google.com/js/platform.js" async defer></script>
-
-<meta name="google-signin-client_id" content="624168443480-alor55af0q15l98l07c7u0rsc5fkep7t.apps.googleusercontent.com"> -->
-
-<!-- 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 -->
 <?php
-// require('connect_db.php');
-include('redirect.php');
-// require('function_db.php');
-
+include('header.php');
+if(!isset($_SESSION['id'])){//brings you to the home page to login
+  header("Refresh:0; url=http://localhost/db_project/index.php");
+}
 $list_of_groups = getAllRoommateGroups();
 $group_to_leave = null;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -29,68 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
       $list_of_groups = getAllRoommateGroups();
     }
 }
-
-if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SESSION['name'])) {
-  echo 'Welcome, ';
-  echo $_SESSION['name'];
-
-  echo '!<a href="food.php">Click to add food items      </a>';
-  echo '<a href="roommate_form.php">Click add roommates            </a>';
-  echo '<a href="grocery_lists.php">Your Grocery Lists</a>';
-  echo '<a href="index.php">Go back to home page</a>';
-  echo '<a href="logout.php">Logout</a>';
-  // session_destroy();
-} else {
-  echo "Please log in first to see this page.";
-  echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
-}
 ?>
-
-
-<!-- 1. create HTML5 doctype -->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-
-  <!-- 2. include meta tag to ensure proper rendering and touch zooming -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--
-  Bootstrap is designed to be responsive to mobile.
-  Mobile-first styles are part of the core framework.
-
-  width=device-width sets the width of the page to follow the screen-width
-  initial-scale=1 sets the initial zoom level when the page is first loaded
-  -->
-
-  <meta name="author" content="your name">
-  <meta name="description" content="include some description about your page">
-
-  <title>DB interfacing example</title>
-
-  <!-- 3. link bootstrap -->
-  <!-- if you choose to use CDN for CSS bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-  <!-- you may also use W3's formats -->
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-  <!--
-  Use a link tag to link an external resource.
-  A rel (relationship) specifies relationship between the current document and the linked resource.
-  -->
-
-  <!-- If you choose to use a favicon, specify the destination of the resource in href -->
-  <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
-
-  <!-- if you choose to download bootstrap and host it locally -->
-  <!-- <link rel="stylesheet" href="path-to-your-file/bootstrap.min.css" /> -->
-
-  <!-- include your CSS -->
-  <!-- <link rel="stylesheet" href="custom.css" />  -->
-
-</head>
-
 <body>
 <div class="container">
   <h1>Roommate Group Creation</h1>
