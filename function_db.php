@@ -75,21 +75,74 @@ function getAllRoommateGroups()
 
 function makeRoommmateGroup($id,$group_name){
 	global $db;
-	echo $id;
 	echo $group_name;
-	$query = "insert into roommates (user_id,group_name,num_of_ppl) values (:user_id,:group_name,:num_of_ppl)";
-	$statement = $db->prepare($query);
-	$statement->bindValue(":user_id",$id);
-	$statement->bindValue(":group_name",$group_name);
-	$statement->bindValue(":num_of_ppl",1);
+	echo $id;
+
+	$num_of_exist = "SELECT * FROM roommates WHERE group_name = :group_name";
+	$statement1 = $db->prepare($num_of_exist);
+	$statement1->bindValue(":group_name",$group_name);
+	$result = $statement1->fetch();	
+	$statement1->closeCursor();
+	if(empty($result)){//makes sure the name is unique, dont want two groups with the same group names
+		echo "empty";
+		$query = "INSERT INTO roommates (user_id,group_name) VALUES (:user_id,:group_name)";
+		$statement = $db->prepare($query);
+		$statement->bindValue(":user_id",$id);
+		$statement->bindValue(":group_name",$group_name);
+		$statement->execute();
+		$statement->closeCursor();
+	}
+}
+
+function joinRoommateGroup($id,$group_name){
+	global $db;
+	//phase 1: check if the user already joined
+	$is_user_already_in_group_query = "SELECT * FROM roommates WHERE user_id = :user_id AND group_name = :group_name";
+	$checking_statement = $db->prepare($is_user_already_in_group_query);
+	$checking_statement->bindValue(":user_id",$id);
+	$checking_statement->bindValue(":group_name",$group_name);
+	$checking_result = $checking_statement->fetch();
+	$checking_statement->closeCursor();
+
+	if(empty($checking_result)){//phase 2: if empty, join the group by inserting into the table
+		$insert_query = "insert into roommates (user_id,group_name) values (:user_id,:group_name)";
+		$insert_statement = $db->prepare($insert_query);
+		$insert_statement->bindValue(":user_id",$id);
+		$insert_statement->bindValue(":group_name",$group_name);
+		$insert_statement->execute();
+		$insert_statement->closeCursor();
+		
+	}
+}
+
+function leaveRMGroup($id,$group_name){
+	global $db;
+   	$query = "DELETE FROM roommates WHERE user_id = :user_id AND group_name = :group_name";
+	$statement = $db->prepare($query); 
+	$statement->bindValue(':user_id',$id);
+	$statement->bindValue(':group_name',$group_name);
 	$statement->execute();
+	$result = $statement->fetch();
 	$statement->closeCursor();
+	return $result;
 }
 
+// function getRMGroupByName($group_name){
+// 	global $db;
+// 	$query = "select DISTINCT(*) from roommates where group_name = :group_name";
+// // 1. prepare
+// // 2. bindValue & execute
+// 	$statement = $db->prepare($query);
+// 	$statement->bindValue(':group_name', $group_name);
+// 	$statement->execute();
 
-function joinRoommateGroup(){
-	
-}
+// 	// fetch() returns a row
+// 	$results = $statement->fetch();   
+
+// 	$statement->closeCursor();
+
+// 	return $results;
+// }
 
 function num_of_user($google_id){
    global $db;
