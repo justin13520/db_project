@@ -197,11 +197,11 @@ function makeGL(){
 
 function getAllGL($google_id){
 	global $db;
-	$query = "select * from grocery_list where google_id = :GL_User_ID";
+	$query = "select * from grocery_list where GL_User_ID = :GL_User_ID";
 	$statement = $db->prepare($query);
 	$statement->bindValue(':GL_User_ID',$google_id);
 	$statement->execute();
-	$result = $statement->fetch();
+	$result = $statement->fetchAll();
 	$statement->closeCursor();
 	return $result;
 }

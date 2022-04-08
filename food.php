@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <form name="mainForm" action="food.php" method="post">
   <div class="row mb-3 mx-3">
     Item_type:
-    <input type="text" class="form-control" name="item_type" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
+    <input type="text" class="form-control" name="item_type" required/> <!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
   </div>
   <div class="row mb-3 mx-3">
     Price:
@@ -67,7 +67,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <th width="12%">Delete?</th>
   </tr>
   </thead>
-  <?php foreach ($list_of_foods as $food):  ?>
+  <?php 
+  $page = intval($_GET['page']);
+
+  // The number of records to display per page
+  $page_size = 10;
+  
+  // Calculate total number of records, and total number of pages
+  $total_records = count($list_of_foods);
+  $total_pages   = ceil($total_records / $page_size);
+  
+  // Validation: Page to display can not be greater than the total number of pages
+  if ($page > $total_pages) {
+      $page = $total_pages;
+  }
+  
+  // Validation: Page to display can not be less than 1
+  if ($page < 1) {
+      $page = 1;
+  }
+  
+  // Calculate the position of the first record of the page to display
+  $offset = ($page - 1) * $page_size;
+  
+  // Get the subset of records to be displayed from the array
+  $data = array_slice($list_of_foods, $offset, $page_size);
+
+  $page_first = $page > 1 ? 1 : '';
+  $page_prev  = $page > 1 ? $page-1 : '';
+  $page_next  = $page + 1;
+  $page_last  = $total_pages;
+
+
+  ?>
+  <?php foreach ($data as $food):  ?>
   <tr>
     <td><?php echo $food['item_type']; ?></td>
     <td><?php echo $food['price']; ?></td>
@@ -85,10 +118,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         </form>
     </td>
   </tr>
-  <?php endforeach; ?>
+  <?php endforeach; ?> 
+
 
 
   </table>
+  <div>
+    <a href="food.php?page=<?php echo $page_first; ?>">« First</a>
+    <a href="food.php?page=<?php echo $page_prev; ?>">Prev</a>
+    <a href="food.php?page=<?php echo $page_next; ?>">Next</a>
+    <a href="food.php?page=<?php echo $page_last; ?>">Last »</a>
+  </div>
 <!-- </div>   -->
 
 
