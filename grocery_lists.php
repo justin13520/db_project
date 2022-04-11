@@ -29,7 +29,7 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
 <hr/>
 <h2>List of Foods in <?=$group_name?> List</h2>
 <!-- <div class="row justify-content-center">   -->
-<table class="w3-table w3-bordered w3-card-4" style="width:90%">
+<table class="w3-table w3-bordered w3-card-4">
   <thead>
   <tr style="background-color:#B0B0B0">
     <th width="25%">Item Name</th>
