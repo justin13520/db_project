@@ -100,7 +100,7 @@ table{width:100%};
                     echo '<li class="active"><a href="index.php">Home</a></li>';
                     echo '<li><a href="food.php?page=">Food Directory</a></li>';
                     echo '<li><a href="roommate_form.php">Roommate Groups</a></li>';
-                    echo '<li><a href="grocery_lists.php">Your Grocery Lists</a></li>';
+                    echo '<li><a href="grocery_lists.php?page=">Your Grocery Lists</a></li>';
                     echo '<li><a href="logout.php">Logout</a></li>';
                 echo '</ul>';
             } else {
