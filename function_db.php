@@ -41,7 +41,7 @@ function addFoodToList($id, $item_id){
 		$query = "insert into items_in_list (grocery_list_id,grocery_item_id) values (:grocery_list_id,:grocery_item_id)";
 		$statement = $db->prepare($query);
 		$statement->bindValue(':grocery_item_id',$item_id);
-		$statement->bindValue(':grocery_list_id',(int)$results[0][1]);
+		$statement->bindValue(':grocery_list_id', $results[0][1]);
 		$statement->execute();
 		$statement->closeCursor();
 	}
@@ -79,7 +79,7 @@ function getAllFoodInList($id){
 
 		$query = "SELECT grocery_item_id FROM items_in_list WHERE grocery_list_id = :grocery_list_id";
 		$statement = $db->prepare($query);
-		$statement->bindValue(':grocery_list_id',(int)$results[0][1]);
+		$statement->bindValue(':grocery_list_id', $results[0][1]);
 		$statement->execute();
 		$resultsFood = $statement->fetchAll();
 		$statement->closeCursor();

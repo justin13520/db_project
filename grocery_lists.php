@@ -4,7 +4,7 @@
 // require('connect_db.php');
 require('header.php');
 
-$list_of_GL = getAllGL($_SESSION['id']);
+//$list_of_GL = getAllGL($_SESSION['id']);
 $group_name = getMyGroup($_SESSION['id']);
 
 //echo $group_name;
