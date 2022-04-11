@@ -73,6 +73,7 @@ function getAllFoodInList($id){
 
 	if(count($results) == 0){
 		echo "Need to join a roommate group to see your list!";
+		return [];
 	}else{
 		//print_r($results[0][1]);
 
@@ -110,7 +111,10 @@ function getMyGroup($id){
 	$statementRoommate->execute();
 	$results = $statementRoommate->fetchAll();
 	$statementRoommate->closeCursor();
-	return $results[0][1];
+	if(count($results) == 0){
+	}else{
+		return $results[0][1];
+	}
 }
 
 function addUser($name,$email,$google_id,$profile_image)
