@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <hr/>
 <h2>List of Food</h2>
 <!-- <div class="row justify-content-center">   -->
-<table class="w3-table w3-bordered w3-card-4" style="width:90%">
+<table class="w3-table w3-bordered w3-card-4">
   <thead>
   <tr style="background-color:#B0B0B0">
     <th width="25%">Item Name</th>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
   </table>
-  <div>
+  <div style = "font-size:20px;text-align: center;padding-bottom:30px;padding-top:30px;">
     <a href="food.php?page=<?php echo $page_first; ?>">« First</a>
     <a href="food.php?page=<?php echo $page_prev; ?>">Prev</a>
     <a href="food.php?page=<?php echo $page_next; ?>">Next</a>
