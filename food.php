@@ -1,10 +1,14 @@
 <?php
 // require('connect_db.php');
 require('header.php');
+if(!isset($_SESSION['id'])){//brings you to the home page to login
+  header("Refresh:0; url=http://localhost/db_project/index.php");
+}
 
 $list_of_foods = getAllFood();
 //$friend_to_update = NULL;
 //$friend_to_delete = NULL;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
@@ -12,6 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         addFood($_POST['item_type'], $_POST['price'], $_POST['brand']);
         $list_of_foods = getAllFood();
     }
+
+    if(!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add Item"){
+        addFoodToList($_SESSION['id'], $_POST['food_to_add']);
+        $list_of_friends = getAllFood();
+    }
+
 //    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
 //    {
 ////
@@ -64,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <th width="25%">Cost</th>
     <th width="20%">Brand</th>
     <th width="12%">Add to list</th>
+    <th width="12%">Update</th>
     <th width="12%">Delete?</th>
   </tr>
   </thead>
@@ -107,14 +118,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <td><?php echo $food['brand']; ?></td>
     <td>
         <form action = "food.php" method = "POST">
+            <input type="submit" value="Add Item" name="btnAction" class="btn btn-primary"/>
+            <input type = "hidden" name = "food_to_add" value = "<?php echo $food['food_id']?>"/>
+        </form>
+    </td>
+    <td>
+        <form action = "food.php" method = "POST">
             <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
-            <input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
+            <input type = "hidden" name = "food_to_update" value = "<?php echo $food['food_id']?>"/>
         </form>
     </td>
     <td>
         <form action = "food.php" method = "POST">
             <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
-            <input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
+            <input type = "hidden" name = "food_to_delete" value = "<?php echo $food['food_id']?>"/>
         </form>
     </td>
   </tr>

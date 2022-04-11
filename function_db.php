@@ -9,7 +9,7 @@ function addFood($item_type,$price,$brand)
 	// insert into friends values('someone', 'cs', 4)";
 //	$query = "insert into friends values('" . $name . "', '" . $major . "'," . $year . ")";
 	$query = "insert into grocery_items (item_type,price,brand) values (:item_type,:price,:brand)";
-	echo "why not?";
+	//echo "why not?";
 
 	// execute the sql
 //	$statement = $db->query($query);   // query() will compile and execute the sql
@@ -20,6 +20,31 @@ function addFood($item_type,$price,$brand)
     $statement->execute();
 	// release; free the connection to the server so other sql statements may be issued
 	$statement->closeCursor();
+}
+
+function addFoodToList($id, $item_id){
+	//echo $id;
+	global $db;
+	$queryRoommate = "SELECT * FROM roommates WHERE user_id = :user_id";
+	$statementRoommate = $db->prepare($queryRoommate);
+	$statementRoommate->bindValue(':user_id', $id);
+	$statementRoommate->execute();
+	$results = $statementRoommate->fetchAll();
+	$statementRoommate->closeCursor();
+	 
+	
+	if(count($results) == 0){
+		echo "Need to join a roommate group to add items!";
+	}else{
+		print_r($results[0][1]);
+
+		$query = "insert into items_in_list (grocery_list_id,grocery_item_id) values (:grocery_list_id,:grocery_item_id)";
+		$statement = $db->prepare($query);
+		$statement->bindValue(':grocery_item_id',$item_id);
+		$statement->bindValue(':grocery_list_id',(int)$results[0][1]);
+		$statement->execute();
+		$statement->closeCursor();
+	}
 }
 
 function getAllFood()
@@ -34,6 +59,58 @@ function getAllFood()
 	$statement->closeCursor();
 
 	return $results;
+}
+
+function getAllFoodInList($id){
+	global $db;
+
+	$queryRoommate = "SELECT * FROM roommates WHERE user_id = :user_id";
+	$statementRoommate = $db->prepare($queryRoommate);
+	$statementRoommate->bindValue(':user_id', $id);
+	$statementRoommate->execute();
+	$results = $statementRoommate->fetchAll();
+	$statementRoommate->closeCursor();
+
+	if(count($results) == 0){
+		echo "Need to join a roommate group to see your list!";
+	}else{
+		//print_r($results[0][1]);
+
+		$query = "SELECT grocery_item_id FROM items_in_list WHERE grocery_list_id = :grocery_list_id";
+		$statement = $db->prepare($query);
+		$statement->bindValue(':grocery_list_id',(int)$results[0][1]);
+		$statement->execute();
+		$resultsFood = $statement->fetchAll();
+		$statement->closeCursor();
+		//print_r($resultsFood[0][0]);
+		return $resultsFood;
+	}
+}
+
+function getFoodGivenID($id){
+	global $db;
+	$query = "SELECT * FROM grocery_items WHERE food_id = :food_id";
+	$statement = $db->prepare($query);     // 16-Mar, stopped here, still need to fetch and return the result
+	$statement->bindValue(':food_id',$id);
+	$statement->execute();
+
+	// fetchAll() returns an array of all rows in the result set
+	$results = $statement->fetchAll();
+
+	$statement->closeCursor();
+
+	return $results;
+}
+
+function getMyGroup($id){
+	global $db;
+	$queryRoommate = "SELECT * FROM roommates WHERE user_id = :user_id";
+	$statementRoommate = $db->prepare($queryRoommate);
+	$statementRoommate->bindValue(':user_id', $id);
+	$statementRoommate->execute();
+	$results = $statementRoommate->fetchAll();
+	$statementRoommate->closeCursor();
+	return $results[0][1];
 }
 
 function addUser($name,$email,$google_id,$profile_image)

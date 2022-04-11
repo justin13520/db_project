@@ -5,6 +5,10 @@
 require('header.php');
 
 $list_of_GL = getAllGL($_SESSION['id']);
+$group_name = getMyGroup($_SESSION['id']);
+
+//echo $group_name;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
@@ -13,60 +17,72 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $list_of_GL = getAllGL($_SESSION['id']);
     }
 }
+
+$list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
 ?>
 
 <body>
 <div class="container">
-  <h1>Grocery List Directory</h1>
-
-  <form name="mainForm" action="grocery_list.php" method="post">
-  <div class="row mb-3 mx-3">
-    Item_type:
-    <input type="text" class="form-control" name="item_type" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
-  </div>
-  <div class="row mb-3 mx-3">
-    Price:
-    <input type="number" class="form-control" name="price" required min="1" max="1000000"/> <!-- //value = "<?php if($friend_to_update!=null) echo $friend_to_update['year']?>"/> -->
-  </div>
-  <div class="row mb-3 mx-3">
-    Brand:
-    <input type="text" class="form-control" name="brand" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['major']?>"/> -->
-  </div>
-  <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
-        title="insert a friend" />
-  <input type="submit" value="Confirm Update" name="btnAction" class="btn btn-dark"
-        title="confirm update a friend" />
+  <h1>My Grocery List</h1>
 </form>
 
 <hr/>
-<h2>List of grocery_list</h2>
+<h2>List of Foods in <?=$group_name?> List</h2>
 <!-- <div class="row justify-content-center">   -->
 <table class="w3-table w3-bordered w3-card-4" style="width:90%">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="25%">ID</th>
-    <th width="25%">Date</th>
-    <th width="20%">Num of Items</th>
-    <th width="12%">Update ?</th>
-    <th width="12%">Delete ?</th>
+    <th width="25%">Item Name</th>
+    <th width="25%">Cost</th>
+    <th width="20%">Brand</th>
+    <th width="12%">Remove?</th>
   </tr>
   </thead>
   <?php 
-    foreach ($list_of_GL as $grocery_list):  ?>
+  $page = intval($_GET['page']);
+
+  // The number of records to display per page
+  $page_size = 10;
+  
+  // Calculate total number of records, and total number of pages
+  $total_records = count($list_of_foods_in_list);
+  $total_pages   = ceil($total_records / $page_size);
+  
+  // Validation: Page to display can not be greater than the total number of pages
+  if ($page > $total_pages) {
+      $page = $total_pages;
+  }
+  
+  // Validation: Page to display can not be less than 1
+  if ($page < 1) {
+      $page = 1;
+  }
+  
+  // Calculate the position of the first record of the page to display
+  $offset = ($page - 1) * $page_size;
+  
+  // Get the subset of records to be displayed from the array
+  $data = array_slice($list_of_foods_in_list, $offset, $page_size);
+
+  $page_first = $page > 1 ? 1 : '';
+  $page_prev  = $page > 1 ? $page-1 : '';
+  $page_next  = $page + 1;
+  $page_last  = $total_pages;
+  ?>
+
+  <?php 
+    foreach ($data as $food):  
+    $food_data = getFoodGivenID($food[0]);
+    ?>
+    
     <tr>
-      <td><?php echo $grocery_list['grocery_list_id']; ?></td>
-      <td><?php echo $grocery_list['date']; ?></td>
-      <td><?php echo $grocery_list['num_of_items']; ?></td>
+      <td><?php echo $food_data[0]['item_type']; ?></td>
+      <td><?php echo $food_data[0]['price']; ?></td>
+      <td><?php echo $food_data[0]['brand']; ?></td>
       <td>
-          <form action = "grocery_list.php" method = "POST">
-              <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
-              <input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
-          </form>
-      </td>
-      <td>
-          <form action = "grocery_list.php" method = "POST">
+          <form action = "grocery_lists.php" method = "POST">
               <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
-              <input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
+              <input type = "hidden" name = "food_to_delete" value = "<?php echo $food_data[0]['food_id']?>"/>
           </form>
       </td>
     </tr>
