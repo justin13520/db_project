@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         title="insert a food" />
   <input type="submit" value="Confirm Update" name="btnAction" class="btn btn-dark"
         title="confirm update a food" />
+  <a href = 'exportData.php'>Export</a>
 </form>
 
 <hr/>
