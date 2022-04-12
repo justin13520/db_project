@@ -1,8 +1,5 @@
 <?php
 include('header.php');
-if(!isset($_SESSION['id'])){//brings you to the home page to login
-  header("Refresh:0; url=http://localhost/db_project/index.php");
-}
 $list_of_groups = getAllRoommateGroups();
 $group_to_leave = null;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -55,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <h2>List of Roommate Groups</h2>
 
 <!-- <div class="row justify-content-center">   -->
-<table class="w3-table w3-bordered w3-card-4" style="width:90%">
+<table class="w3-table w3-bordered w3-card-4">
   <thead>
   <tr style="background-color:#B0B0B0">
     <th width="25%">Roommate Group Name</th>
@@ -85,16 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
   </table>
-<!-- </div>   -->
-
-
-  <!-- CDN for JS bootstrap -->
-  <!-- you may also use JS bootstrap to make the page dynamic -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
-
-  <!-- for local -->
-  <!-- <script src="your-js-file.js"></script> -->
-
 </div>
 </body>
 </html>

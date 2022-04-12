@@ -39,7 +39,7 @@
  
 /** S22, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/
  $username = 'jl8wf';
- $password = 'Steins_gate0';
+ $password = 'abc123';
  $host = 'mysql01.cs.virginia.edu';
  $dbname = 'jl8wf_b';
  $dsn = "mysql:host=mysql01.cs.virginia.edu;dbname=jl8wf_b";
@@ -65,7 +65,7 @@ try
    $db = new PDO($dsn, $username, $password);
 
    // dispaly a message to let us know that we are connected to the database 
-   echo "<p>You are connected to the database --- dsn=$dsn, user=$username </p>";
+   // echo "<p>You are connected to the database --- dsn=$dsn, user=$username </p>";
 }
 catch (PDOException $e)     // handle a PDO exception (errors thrown by the PDO library)
 {

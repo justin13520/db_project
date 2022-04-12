@@ -2,162 +2,93 @@
 // session_start();
 // echo session_id();
 // require('connect_db.php');
-require('redirect.php');
+require('header.php');
 
-if(!isset($_SESSION['id'])){
+// $list_of_GL = getAllGL($_SESSION['id']);
+$group_name = getMyGroup($_SESSION['id']);
 
-  echo "OMATO";
-}
-$id = $_SESSION['id'];
-$list_of_GL = getAllGL($id);
-//$friend_to_update = NULL;
-//$friend_to_delete = NULL;
+//echo $group_name;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
-    {
-        makeGL();
-        $list_of_GL = getAllGL($_SESSION['id']);
+    if(!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
+      deleteItemFromList($_POST['food_to_delete'],$group_name);
     }
-//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
-//    {
-////
-//        $friend_to_update = getFriend_byName($_POST['friend_to_update']);
-////        echo "Update " . $friend_to_update;
-////        updateFriend();
-//    }
-//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
-//        deleteFriend($_POST['friend_to_delete']);
-//        $list_of_friends = getAllFriends();
-//    }
-//    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Confirm Update")
-//    {
-//        updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
-//        $list_of_friends = getAllFriends();
-//    }
-
 }
 
-    // include("redirect.php");
-
-    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true && isset($_SESSION['name'])) {
-      echo 'Welcome, ';
-      echo $_SESSION['name'];
-
-      echo '! <br><a href="food.php">Click to add food items      </a>';
-      echo '<a href="roommate_form.php">Click add roommates            </a>';
-      echo '<a href="grocery_lists.php">Your Grocery Lists</a>';
-      echo '<a href="logout.php">Logout</a>';
-      // session_destroy();
-    } else {
-      echo "Please log in first to see this page.";
-      echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
-    }
-
+$list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
 ?>
-
-
-<!-- 1. create HTML5 doctype -->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-
-  <!-- 2. include meta tag to ensure proper rendering and touch zooming -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--
-  Bootstrap is designed to be responsive to mobile.
-  Mobile-first styles are part of the core framework.
-
-  width=device-width sets the width of the page to follow the screen-width
-  initial-scale=1 sets the initial zoom level when the page is first loaded
-  -->
-
-  <meta name="author" content="your name">
-  <meta name="description" content="include some description about your page">
-
-  <title>DB interfacing example</title>
-
-  <!-- 3. link bootstrap -->
-  <!-- if you choose to use CDN for CSS bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-  <!-- you may also use W3's formats -->
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-  <!--
-  Use a link tag to link an external resource.
-  A rel (relationship) specifies relationship between the current document and the linked resource.
-  -->
-
-  <!-- If you choose to use a favicon, specify the destination of the resource in href -->
-  <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
-
-  <!-- if you choose to download bootstrap and host it locally -->
-  <!-- <link rel="stylesheet" href="path-to-your-file/bootstrap.min.css" /> -->
-
-  <!-- include your CSS -->
-  <!-- <link rel="stylesheet" href="custom.css" />  -->
-
-</head>
 
 <body>
 <div class="container">
-  <a href="index.php">Go back to home page</a>
-  <h1>grocery_list directory</h1>
-
-  <form name="mainForm" action="grocery_list.php" method="post">
-  <div class="row mb-3 mx-3">
-    Item_type:
-    <input type="text" class="form-control" name="item_type" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
-  </div>
-  <div class="row mb-3 mx-3">
-    Price:
-    <input type="number" class="form-control" name="price" required min="1" max="1000000"/> <!-- //value = "<?php if($friend_to_update!=null) echo $friend_to_update['year']?>"/> -->
-  </div>
-  <div class="row mb-3 mx-3">
-    Brand:
-    <input type="text" class="form-control" name="brand" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['major']?>"/> -->
-  </div>
-  <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
-        title="insert a friend" />
-  <input type="submit" value="Confirm Update" name="btnAction" class="btn btn-dark"
-        title="confirm update a friend" />
+  <h1>My Grocery List</h1>
 </form>
 
 <hr/>
-<h2>List of grocery_list</h2>
+<h2>List of Foods in <?=$group_name?> List</h2>
 <!-- <div class="row justify-content-center">   -->
-<table class="w3-table w3-bordered w3-card-4" style="width:90%">
+<table class="w3-table w3-bordered w3-card-4">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="25%">ID</th>
-    <th width="25%">Date</th>
-    <th width="20%">Num of Items</th>
-    <th width="12%">Update ?</th>
-    <th width="12%">Delete ?</th>
+    <th width="25%">Item Name</th>
+    <th width="25%">Cost</th>
+    <th width="20%">Brand</th>
+    <th width="12%">Remove?</th>
   </tr>
   </thead>
-  <?php foreach ($list_of_GL as $grocery_list):  ?>
-  <tr>
-    <td><?php echo $grocery_list['grocery_list_id']; ?></td>
-    <td><?php echo $grocery_list['date']; ?></td>
-    <td><?php echo $grocery_list['num_of_items']; ?></td>
-    <td>
-        <form action = "grocery_list.php" method = "POST">
-            <input type="submit" value="Update" name="btnAction" class="btn btn-primary"/>
-            <input type = "hidden" name = "friend_to_update" value = "<?php echo $friend['name']?>"/>
-        </form>
-    </td>
-    <td>
-        <form action = "grocery_list.php" method = "POST">
-            <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
-            <input type = "hidden" name = "friend_to_delete" value = "<?php echo $friend['name']?>"/>
-        </form>
-    </td>
-  </tr>
-  <?php endforeach; ?>
+  <?php 
+  if(!isset($_GET['page'])){
+    $_GET['page'] = '';
+  }
+  $page = intval($_GET['page']);
 
+  // The number of records to display per page
+  $page_size = 10;
+  
+  // Calculate total number of records, and total number of pages
+  $total_records = count($list_of_foods_in_list);
+  $total_pages   = ceil($total_records / $page_size);
+  
+  // Validation: Page to display can not be greater than the total number of pages
+  if ($page > $total_pages) {
+      $page = $total_pages;
+  }
+  
+  // Validation: Page to display can not be less than 1
+  if ($page < 1) {
+      $page = 1;
+  }
+  
+  // Calculate the position of the first record of the page to display
+  $offset = ($page - 1) * $page_size;
+  
+  // Get the subset of records to be displayed from the array
+  $data = array_slice($list_of_foods_in_list, $offset, $page_size);
+
+  $page_first = $page > 1 ? 1 : '';
+  $page_prev  = $page > 1 ? $page-1 : '';
+  $page_next  = $page + 1;
+  $page_last  = $total_pages;
+  ?>
+
+  <?php 
+    foreach ($data as $food):  
+    $food_data = getFoodGivenID($food[0]);
+    ?>
+    
+    <tr>
+      <td><?php echo $food_data[0]['item_type']; ?></td>
+      <td><?php echo $food_data[0]['price']; ?></td>
+      <td><?php echo $food_data[0]['brand']; ?></td>
+      <td>
+          <form action = "grocery_lists.php" method = "POST">
+              <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
+              <input type = "hidden" name = "food_to_delete" value = "<?php echo $food_data[0]['food_id']?>"/>
+              <input type = "hidden" name = "food_to_delete" value = "<?php echo $food_data[0]['food_id']?>"/>
+          </form>
+      </td>
+    </tr>
+  <?php endforeach; ?>
 
   </table>
 <!-- </div>   -->
