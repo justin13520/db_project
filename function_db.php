@@ -182,7 +182,7 @@ function joinRoommateGroup($id,$group_name){
 	$checking_statement = $db->prepare($is_user_already_in_group_query);
 	$checking_statement->bindValue(":user_id",$id);
 	$checking_statement->bindValue(":group_name",$group_name);
-	$checking_result = $checking_statement->fetch();
+	$checking_result = $checking_statement->fetchAll();
 	$checking_statement->closeCursor();
 
 	if(empty($checking_result)){//phase 2: if empty, join the group by inserting into the table
@@ -253,17 +253,18 @@ function num_of_user($google_id){
 //    return $result;
 //}
 //
-//function deleteFriend($name){
-//    global $db;
-//    $query = "DELETE FROM friends WHERE name = :name";
-//    $statement = $db->prepare($query);
-//    $statement->bindValue(':name',$name);
-//    $statement->execute();
-//    $result = $statement->fetch();
-//    $statement->closeCursor();
-//    return $result;
-//}
-//
+function deleteItemFromList($food_id,$group_name){
+   global $db;
+   $query = "DELETE FROM items_in_list WHERE grocery_item_id = :grocery_item_id AND grocery_list_id = :grocery_list_id";
+   $statement = $db->prepare($query);
+   $statement->bindValue(':grocery_item_id',$food_id);
+   $statement->bindValue(':grocery_list_id',$group_name);
+   $statement->execute();
+   $result = $statement->fetch();
+   $statement->closeCursor();
+   return $result;
+}
+
 
 function makeGL(){
 	global $db;

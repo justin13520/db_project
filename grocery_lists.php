@@ -4,17 +4,15 @@
 // require('connect_db.php');
 require('header.php');
 
-//$list_of_GL = getAllGL($_SESSION['id']);
+// $list_of_GL = getAllGL($_SESSION['id']);
 $group_name = getMyGroup($_SESSION['id']);
 
 //echo $group_name;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add")
-    {
-        makeGL();
-        $list_of_GL = getAllGL($_SESSION['id']);
+    if(!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
+      deleteItemFromList($_POST['food_to_delete'],$group_name);
     }
 }
 
@@ -39,6 +37,9 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
   </tr>
   </thead>
   <?php 
+  if(!isset($_GET['page'])){
+    $_GET['page'] = '';
+  }
   $page = intval($_GET['page']);
 
   // The number of records to display per page
@@ -82,6 +83,7 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
       <td>
           <form action = "grocery_lists.php" method = "POST">
               <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
+              <input type = "hidden" name = "food_to_delete" value = "<?php echo $food_data[0]['food_id']?>"/>
               <input type = "hidden" name = "food_to_delete" value = "<?php echo $food_data[0]['food_id']?>"/>
           </form>
       </td>

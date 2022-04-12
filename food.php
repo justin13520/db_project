@@ -79,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   </tr>
   </thead>
   <?php 
+  if(!isset($_GET['page'])){
+    $_GET['page'] = '';
+  }
   $page = intval($_GET['page']);
 
   // The number of records to display per page

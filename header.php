@@ -98,7 +98,7 @@ table{width:100%};
                 echo '<ul class="nav navbar-nav">';
                     // echo '<li class="active"><h1 class ="text-success" style=color:blue;font-size:20px;"> Welcome, ' .  $_SESSION["name"] . '</h1> </li>';
                     echo '<li class="active"><a href="index.php">Home</a></li>';
-                    echo '<li><a href="food.php?page=">Food Directory</a></li>';
+                    echo '<li><a href="food.php">Food Directory</a></li>';
                     echo '<li><a href="roommate_form.php">Roommate Groups</a></li>';
                     echo '<li><a href="grocery_lists.php?page=">Your Grocery Lists</a></li>';
                     echo '<li><a href="logout.php">Logout</a></li>';
