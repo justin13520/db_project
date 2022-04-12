@@ -178,10 +178,11 @@ function makeRoommmateGroup($id,$group_name){
 function joinRoommateGroup($id,$group_name){
 	global $db;
 	//phase 1: check if the user already joined
-	$is_user_already_in_group_query = "SELECT * FROM roommates WHERE user_id = :user_id AND group_name = :group_name";
+	$is_user_already_in_group_query = "SELECT * FROM roommates WHERE user_id = :user_id";
 	$checking_statement = $db->prepare($is_user_already_in_group_query);
 	$checking_statement->bindValue(":user_id",$id);
-	$checking_statement->bindValue(":group_name",$group_name);
+	// $checking_statement->bindValue(":group_name",$group_name);
+	$checking_statement->execute();
 	$checking_result = $checking_statement->fetchAll();
 	$checking_statement->closeCursor();
 

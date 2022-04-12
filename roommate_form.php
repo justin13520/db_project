@@ -2,6 +2,7 @@
 include('header.php');
 $list_of_groups = getAllRoommateGroups();
 $group_to_leave = null;
+$group = getMyGroup($_SESSION['id']);
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['AddRMGroup']) && $_POST['AddRMGroup'] == "Add")
@@ -25,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>
 <div class="container">
   <h1>Roommate Group Creation</h1>
+  <h2><?php echo "You are currently in roommate group: " . $group ?></h2>
   <div class="g-signin2" data-onsuccess="onSignIn"></div>
 
 

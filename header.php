@@ -54,12 +54,12 @@
 body {background-color: powderblue;}
 h1   {color: blue;}
 p    {color: red;}
-div {
+/* div {
   /* padding-top: 50px; */
   /* padding-right: 30px;
   padding-bottom: 50px;
   padding-left: 80px; */
-}
+/* } */
 table{width:100%};
 
 /* table   {color: white;} */
