@@ -239,6 +239,11 @@ function num_of_user($google_id){
 
 function deleteFood($food_id){
 	global $db;
+	$query = "DELETE FROM grocery_items WHERE food_id = :food_id";
+	$statement = $db->prepare($query);
+	$statement->bindValue(':food_id',$food_id);
+	$statement->execute();
+	$statement->closeCursor();
 
 }
 
