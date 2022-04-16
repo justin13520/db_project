@@ -36,14 +36,36 @@ function addFoodToList($id, $item_id){
 	if(count($results) == 0){
 		echo "Need to join a roommate group to add items!";
 	}else{
-		print_r($results[0][1]);
+		//print_r($results[0][1]);
+		$queryExists = "SELECT list_id FROM items_in_list WHERE grocery_list_id = :grocery_list_id AND grocery_item_id = :grocery_item_id";
+		$statementExists = $db->prepare($queryExists);
+		$statementExists->bindValue(':grocery_list_id', $results[0][1]);
+		$statementExists->bindValue(':grocery_item_id', $item_id);
+		$statementExists->execute();
+		$resultsExists = $statementExists->fetchAll();
+		$statementExists->closeCursor();
+		//print_r($resultsExists);
 
-		$query = "insert into items_in_list (grocery_list_id,grocery_item_id) values (:grocery_list_id,:grocery_item_id)";
-		$statement = $db->prepare($query);
-		$statement->bindValue(':grocery_item_id',$item_id);
-		$statement->bindValue(':grocery_list_id', $results[0][1]);
-		$statement->execute();
-		$statement->closeCursor();
+		if(count($resultsExists) > 0){
+			echo $resultsExists[0][0];
+			$queryQuantity = "UPDATE list_info SET quantity = quantity + 1 WHERE list_id = :list_id";
+			$statementQuantity = $db->prepare($queryQuantity);
+			$statementQuantity->bindValue(':list_id', $resultsExists[0][0]);
+			$statementQuantity->execute();
+			$statementQuantity->closeCursor();
+		}else{
+			$query = "insert into items_in_list (grocery_list_id,grocery_item_id) values (:grocery_list_id,:grocery_item_id)";
+			$statement = $db->prepare($query);
+			$statement->bindValue(':grocery_item_id',$item_id);
+			$statement->bindValue(':grocery_list_id', $results[0][1]);
+			$statement->execute();
+			$statement->closeCursor();
+
+			$queryInfo = "insert into list_info (quantity) values (1)";
+			$statementInfo = $db->prepare($queryInfo);
+			$statementInfo->execute();
+			$statementInfo->closeCursor();
+		}
 	}
 }
 
@@ -77,7 +99,7 @@ function getAllFoodInList($id){
 	}else{
 		//print_r($results[0][1]);
 
-		$query = "SELECT grocery_item_id FROM items_in_list WHERE grocery_list_id = :grocery_list_id";
+		$query = "SELECT * FROM items_in_list WHERE grocery_list_id = :grocery_list_id";
 		$statement = $db->prepare($query);
 		$statement->bindValue(':grocery_list_id', $results[0][1]);
 		$statement->execute();
@@ -93,6 +115,21 @@ function getFoodGivenID($id){
 	$query = "SELECT * FROM grocery_items WHERE food_id = :food_id";
 	$statement = $db->prepare($query);     // 16-Mar, stopped here, still need to fetch and return the result
 	$statement->bindValue(':food_id',$id);
+	$statement->execute();
+
+	// fetchAll() returns an array of all rows in the result set
+	$results = $statement->fetchAll();
+
+	$statement->closeCursor();
+
+	return $results;
+}
+
+function getInfoGivenID($id){
+	global $db;
+	$query = "SELECT * FROM list_info WHERE list_id = :list_id";
+	$statement = $db->prepare($query);     // 16-Mar, stopped here, still need to fetch and return the result
+	$statement->bindValue(':list_id',$id);
 	$statement->execute();
 
 	// fetchAll() returns an array of all rows in the result set

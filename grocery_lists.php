@@ -31,8 +31,10 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
   <thead>
   <tr style="background-color:#B0B0B0">
     <th width="25%">Item Name</th>
-    <th width="25%">Cost</th>
+    <th width="10%">Cost</th>
     <th width="20%">Brand</th>
+    <th width="10%">Quantity</th>
+    <th width="12%">Date Added</th>
     <th width="12%">Remove?</th>
   </tr>
   </thead>
@@ -73,13 +75,16 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
 
   <?php 
     foreach ($data as $food):  
-    $food_data = getFoodGivenID($food[0]);
+    $food_data = getFoodGivenID($food['grocery_item_id']);
+    $list_data = getInfoGivenID($food['list_id']);
     ?>
     
     <tr>
       <td><?php echo $food_data[0]['item_type']; ?></td>
       <td><?php echo $food_data[0]['price']; ?></td>
       <td><?php echo $food_data[0]['brand']; ?></td>
+      <td><?php echo $list_data[0]['quantity']; ?></td>
+      <td><?php echo $list_data[0]['date_added']; ?></td>
       <td>
           <form action = "grocery_lists.php" method = "POST">
               <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
