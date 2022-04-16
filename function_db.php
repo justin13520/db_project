@@ -315,7 +315,8 @@ function num_of_user($google_id){
    $statement->execute();
    $result = $statement->fetch();
    $statement->closeCursor();
-   return $result;
+   echo $result[0];
+   return $result[0];
 }
 //
 //
