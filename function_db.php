@@ -86,26 +86,26 @@ function addFoodToList($id, $item_id){
 		echo "Need to join a roommate group to add items!";
 	}else{
 		//print_r($results[0][1]);
-		$queryExists = "SELECT list_id FROM items_in_list WHERE grocery_list_id = :grocery_list_id AND grocery_item_id = :grocery_item_id";
+		$queryExists = "SELECT list_id FROM items_in_list WHERE grocery_list_id = :grocery_list_id AND food_id = :food_id";
 		$statementExists = $db->prepare($queryExists);
 		$statementExists->bindValue(':grocery_list_id', $results[0][1]);
-		$statementExists->bindValue(':grocery_item_id', $item_id);
+		$statementExists->bindValue(':food_id', $item_id);
 		$statementExists->execute();
 		$resultsExists = $statementExists->fetchAll();
 		$statementExists->closeCursor();
 		//print_r($resultsExists);
 
 		if(count($resultsExists) > 0){
-			echo $resultsExists[0][0];
+			//echo $resultsExists[0][0];
 			$queryQuantity = "UPDATE list_info SET quantity = quantity + 1 WHERE list_id = :list_id";
 			$statementQuantity = $db->prepare($queryQuantity);
 			$statementQuantity->bindValue(':list_id', $resultsExists[0][0]);
 			$statementQuantity->execute();
 			$statementQuantity->closeCursor();
 		}else{
-			$query = "insert into items_in_list (grocery_list_id,grocery_item_id) values (:grocery_list_id,:grocery_item_id)";
+			$query = "insert into items_in_list (grocery_list_id,food_id) values (:grocery_list_id,:food_id)";
 			$statement = $db->prepare($query);
-			$statement->bindValue(':grocery_item_id',$item_id);
+			$statement->bindValue(':food_id',$item_id);
 			$statement->bindValue(':grocery_list_id', $results[0][1]);
 			$statement->execute();
 			$statement->closeCursor();
@@ -387,9 +387,9 @@ function num_of_user($google_id){
 //
 function deleteItemFromList($food_id,$group_name){
    global $db;
-   $query = "DELETE FROM items_in_list WHERE grocery_item_id = :grocery_item_id AND grocery_list_id = :grocery_list_id";
+   $query = "DELETE FROM items_in_list WHERE food_id = :food_id AND grocery_list_id = :grocery_list_id";
    $statement = $db->prepare($query);
-   $statement->bindValue(':grocery_item_id',$food_id);
+   $statement->bindValue(':food_id',$food_id);
    $statement->bindValue(':grocery_list_id',$group_name);
    $statement->execute();
    $result = $statement->fetch();
@@ -414,6 +414,43 @@ function payItemFromList($list_id,$google_id){
 		$statement->bindValue(':list_id',$list_id);
 		$statement->execute();
 		$statement->closeCursor();
+
+		$querySearchBill = "SELECT * FROM pay_bill WHERE google_id = :google_id";
+		$statementSearchBill = $db->prepare($querySearchBill);
+		$statementSearchBill->bindValue(':google_id',$google_id);
+		$statementSearchBill->execute();
+		$resultSearchBill = $statementSearchBill->fetchAll();
+		$statementSearchBill->closeCursor();
+
+		if(count($resultSearchBill) == 0){
+			$queryNewBill = "INSERT INTO pay_bill (google_id) values (:google_id)";
+			$statementNewBill = $db->prepare($queryNewBill);
+			$statementNewBill->bindValue(':google_id',$google_id);
+			$statementNewBill->execute();
+			$statementNewBill->closeCursor();
+
+			$queryNewBill2 = "INSERT INTO bill (google_id) values (:google_id)";
+			$statementNewBill2 = $db->prepare($queryNewBill2);
+			$statementNewBill2->bindValue(':google_id',$google_id);
+			$statementNewBill2->execute();
+			$statementNewBill2->closeCursor();
+		}
+
+		$queryGetPrice = "SELECT price FROM grocery_items NATURAL JOIN items_in_list WHERE list_id = :list_id";
+		$statementGetPrice = $db->prepare($queryGetPrice);
+		$statementGetPrice->bindValue(':list_id', $list_id);
+		$statementGetPrice->execute();
+		$resultGetPrice = $statementGetPrice->fetchAll();
+		$statementGetPrice->closeCursor();
+		
+		$queryBillUpdate = "UPDATE bill NATURAL JOIN pay_bill SET bill_amount = bill_amount + :amount WHERE google_id = :google_id";
+		$statementBillUpdate = $db->prepare($queryBillUpdate);
+		$statementBillUpdate->bindValue(':amount', $resultGetPrice[0][0]);
+		$statementBillUpdate->bindValue(':google_id', $google_id);
+		$statementBillUpdate->execute();
+		$statementBillUpdate->closeCursor();
+
+
    }else{
 		echo "Someone is already paying for this item!";
    }
