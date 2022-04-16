@@ -165,6 +165,25 @@ function getWantGivenID($id){
 	return $results[0]['name'];
 }
 
+function getPayGivenID($id){
+	global $db;
+	$query = "SELECT name FROM who_pays NATURAL JOIN users WHERE list_id = :list_id";
+	$statement = $db->prepare($query);     // 16-Mar, stopped here, still need to fetch and return the result
+	$statement->bindValue(':list_id',$id);
+	$statement->execute();
+
+	// fetchAll() returns an array of all rows in the result set
+	$results = $statement->fetchAll();
+
+	$statement->closeCursor();
+
+	if(count($results) == 0){
+		return "-";
+	}
+
+	return $results[0]['name'];
+}
+
 function getMyGroup($id){
 	global $db;
 	$queryRoommate = "SELECT * FROM roommates WHERE user_id = :user_id";
@@ -326,6 +345,31 @@ function deleteItemFromList($food_id,$group_name){
    $result = $statement->fetch();
    $statement->closeCursor();
    return $result;
+}
+
+function payItemFromList($list_id,$google_id){
+   global $db;
+   $querySearch = "SELECT * FROM who_pays WHERE list_id = :list_id";
+   $statementSearch = $db->prepare($querySearch);
+   $statementSearch->bindValue(':list_id',$list_id);
+   $statementSearch->execute();
+   $resultSearch = $statementSearch->fetchAll();
+   $statementSearch->closeCursor();
+
+
+   if(count($resultSearch) == 0){
+		$query = "INSERT INTO who_pays (google_id, list_id) values (:google_id,:list_id)";
+		$statement = $db->prepare($query);
+		$statement->bindValue(':google_id',$google_id);
+		$statement->bindValue(':list_id',$list_id);
+		$statement->execute();
+		$statement->closeCursor();
+   }else{
+		echo "Someone is already paying for this item!";
+   }
+
+
+   
 }
 
 
