@@ -65,6 +65,12 @@ function addFoodToList($id, $item_id){
 			$statementInfo = $db->prepare($queryInfo);
 			$statementInfo->execute();
 			$statementInfo->closeCursor();
+
+			$queryWants = "insert into who_wants (google_id) values (:google_id)";
+			$statementWants = $db->prepare($queryWants);
+			$statementWants->bindValue(':google_id',$id);
+			$statementWants->execute();
+			$statementWants->closeCursor();
 		}
 	}
 }
@@ -138,6 +144,25 @@ function getInfoGivenID($id){
 	$statement->closeCursor();
 
 	return $results;
+}
+
+function getWantGivenID($id){
+	global $db;
+	$query = "SELECT name FROM who_wants NATURAL JOIN users WHERE list_id = :list_id";
+	$statement = $db->prepare($query);     // 16-Mar, stopped here, still need to fetch and return the result
+	$statement->bindValue(':list_id',$id);
+	$statement->execute();
+
+	// fetchAll() returns an array of all rows in the result set
+	$results = $statement->fetchAll();
+
+	$statement->closeCursor();
+
+	if(count($results) == 0){
+		return "-";
+	}
+
+	return $results[0]['name'];
 }
 
 function getMyGroup($id){
