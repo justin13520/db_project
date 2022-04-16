@@ -6,8 +6,8 @@ if(!isset($_SESSION['id'])){//brings you to the home page to login
 }
 
 $list_of_foods = getAllFood();
-//$friend_to_update = NULL;
-//$friend_to_delete = NULL;
+$food_to_update = NULL;
+$food_to_update_id = NULL;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
@@ -17,27 +17,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $list_of_foods = getAllFood();
     }
 
-    if(!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add Item"){
+    else if(!empty($_POST['btnAction']) && $_POST['btnAction'] == "Add Item"){
         addFoodToList($_SESSION['id'], $_POST['food_to_add']);
-        $list_of_friends = getAllFood();
+        $list_of_foods = getAllFood();
     }
 
-//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
-//    {
-////
-//        $friend_to_update = getFriend_byName($_POST['friend_to_update']);
-////        echo "Update " . $friend_to_update;
-////        updateFriend();
-//    }
-//    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
-//        deleteFriend($_POST['friend_to_delete']);
-//        $list_of_friends = getAllFriends();
-//    }
-//    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Confirm Update")
-//    {
-//        updateFriend($_POST['name'], $_POST['major'], $_POST['year']);
-//        $list_of_friends = getAllFriends();
-//    }
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Update")
+    {
+        $food_to_update_id = $_POST['food_to_update'];
+        $food_to_update = getFoodGivenID($_POST['food_to_update']);
+    }
+    else if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
+        deletefood($_POST['food_to_delete']);
+        $list_of_foods = getAllfood();
+    }
+    if (!empty($_POST['btnAction']) && $_POST['btnAction'] == "Confirm Update")
+    {
+        updatefood($_POST['item_type'], $_POST['price'], $_POST['brand'], $_POST['food_to_update']);
+        $list_of_foods = getAllfood();
+    }
 }
 ?>
 
@@ -48,15 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
   <form name="mainForm" action="food.php" method="post">
   <div class="row mb-3 mx-3">
     Item_type:
-    <input type="text" class="form-control" name="item_type" required/> <!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['name']?>"/> -->
+    <input type="text" class="form-control" name="item_type" required value = "<?php if($food_to_update!=null) echo $food_to_update['item_type']?>"/>
   </div>
   <div class="row mb-3 mx-3">
     Price:
-    <input type="number" class="form-control" name="price" required min="1" max="1000000"/> <!-- //value = "<?php if($friend_to_update!=null) echo $friend_to_update['year']?>"/> -->
+    <input type="number" class="form-control" name="price" required min="1" max="1000000" value = "<?php if($food_to_update!=null) echo $food_to_update['price']?>"/>
   </div>
   <div class="row mb-3 mx-3">
     Brand:
-    <input type="text" class="form-control" name="brand" required/><!--// value = "<?php if($friend_to_update!=null) echo $friend_to_update['major']?>"/> -->
+    <input type="text" class="form-control" name="brand" required value = "<?php if($food_to_update!=null) echo $food_to_update['brand']?>"/> 
+    <input type = "hidden" name = "food_to_update" value = "<?php if($food_to_update_id != null) echo $food_to_update_id ?>"/>
   </div>
   <input type="submit" value="Add" name="btnAction" class="btn btn-dark"
         title="insert a food" />

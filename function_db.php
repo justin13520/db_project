@@ -118,8 +118,8 @@ function getFoodGivenID($id){
 	$statement->execute();
 
 	// fetchAll() returns an array of all rows in the result set
-	$results = $statement->fetchAll();
-
+	$results = $statement->fetch();
+	
 	$statement->closeCursor();
 
 	return $results;
@@ -273,24 +273,30 @@ function num_of_user($google_id){
    $statement->closeCursor();
    return $result;
 }
-//
-//
-//function updateFriend($name,$major,$year){
-//    global $db;
-//    $query = "UPDATE friends SET major = :major, year = :year WHERE name = :name";
-//    $statement = $db->prepare($query);
-//    $statement->bindValue(':name',$name);
-////    echo $name;
-//    $statement->bindValue(':major',$major);
-////    echo $major;
-//    $statement->bindValue(':year',$year);
-////    echo $year;
-//    $statement->execute();
-//    $result = $statement->fetchAll();
-//    $statement->closeCursor();
-//    return $result;
-//}
-//
+
+function deleteFood($food_id){
+	global $db;
+	$query = "DELETE FROM grocery_items WHERE food_id = :food_id";
+	$statement = $db->prepare($query);
+	$statement->bindValue(':food_id',$food_id);
+	$statement->execute();
+	$statement->closeCursor();
+
+}
+
+function updateFood($item_type,$price,$brand,$food_id){
+   global $db;
+//    echo "food id: " . $food_id;
+   $query = "UPDATE grocery_items SET brand = :brand, item_type = :item_type, price = :price WHERE food_id = :food_id";
+   $statement = $db->prepare($query);
+   $statement->bindValue(':brand',$brand);
+   $statement->bindValue(':item_type',$item_type);
+   $statement->bindValue(':price',$price);
+   $statement->bindValue(':food_id',$food_id);
+   $statement->execute();
+   $statement->closeCursor();
+}
+
 function deleteItemFromList($food_id,$group_name){
    global $db;
    $query = "DELETE FROM items_in_list WHERE grocery_item_id = :grocery_item_id AND grocery_list_id = :grocery_list_id";
