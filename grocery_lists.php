@@ -14,6 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     if(!empty($_POST['btnAction']) && $_POST['btnAction'] == "Delete"){
       deleteItemFromList($_POST['food_to_delete'],$group_name);
     }
+
+    if(!empty($_POST['btnAction']) && $_POST['btnAction'] == "Pay"){
+      payItemFromList($_POST['food_to_pay'], $_SESSION['id']);
+    }
 }
 
 $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
@@ -30,13 +34,15 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
 <table class="w3-table w3-bordered w3-card-4">
   <thead>
   <tr style="background-color:#B0B0B0">
-    <th width="25%">Item Name</th>
+    <th width="20%">Item Name</th>
     <th width="10%">Cost</th>
-    <th width="20%">Brand</th>
+    <th width="12%">Brand</th>
     <th width="10%">Quantity</th>
     <th width="12%">Requested By</th>
+    <th width="12%">Paid By</th>
     <th width="12%">Date Added</th>
     <th width="12%">Remove?</th>
+    <th width="12%">Pay?</th>
   </tr>
   </thead>
   <?php 
@@ -79,6 +85,7 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
     $food_data = getFoodGivenID($food['grocery_item_id']);
     $list_data = getInfoGivenID($food['list_id']);
     $want_data = getWantGivenID($food['list_id']);
+    $pay_data = getPayGivenID($food['list_id']);
     ?>
     
     <tr>
@@ -87,12 +94,18 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
       <td><?php echo $food_data[0]['brand']; ?></td>
       <td><?php echo $list_data[0]['quantity']; ?></td>
       <td><?php echo $want_data; ?></td>
+      <td><?php echo $pay_data; ?></td>
       <td><?php echo $list_data[0]['date_added']; ?></td>
       <td>
           <form action = "grocery_lists.php" method = "POST">
               <input type="submit" value="Delete" name="btnAction" class="btn btn-danger"/>
               <input type = "hidden" name = "food_to_delete" value = "<?php echo $food_data[0]['food_id']?>"/>
-              <input type = "hidden" name = "food_to_delete" value = "<?php echo $food_data[0]['food_id']?>"/>
+          </form>
+      </td>
+      <td>
+          <form action = "grocery_lists.php" method = "POST">
+              <input type="submit" value="Pay" name="btnAction" class="btn btn-success"/>
+              <input type = "hidden" name = "food_to_pay" value = "<?php echo $food['list_id']?>"/>
           </form>
       </td>
     </tr>
