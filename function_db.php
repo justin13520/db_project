@@ -22,6 +22,55 @@ function addFood($item_type,$price,$brand)
 	$statement->closeCursor();
 }
 
+function deleteFood($food_id, $id){
+	global $db;
+
+	$queryMod = "SELECT * FROM moderators WHERE google_id = :google_id";
+	$statementMod = $db->prepare($queryMod);
+	$statementMod->bindValue(':google_id', $id);
+	$statementMod->execute();
+	$resultsMod = $statementMod->fetchAll();
+	$statementMod->closeCursor();
+
+	if(count($resultsMod) != 0){
+		$query = "DELETE FROM grocery_items WHERE food_id = :food_id";
+		$statement = $db->prepare($query);
+		$statement->bindValue(':food_id',$food_id);
+		$statement->execute();
+		$statement->closeCursor();
+	}else{
+		echo "You have to be a moderator to do this action!";
+	}
+
+	
+
+}
+
+function updateFood($item_type,$price,$brand,$food_id){
+   global $db;
+
+   $queryMod = "SELECT * FROM moderators WHERE google_id = :google_id";
+	$statementMod = $db->prepare($queryMod);
+	$statementMod->bindValue(':google_id', $id);
+	$statementMod->execute();
+	$resultsMod = $statementMod->fetchAll();
+	$statementMod->closeCursor();
+
+	if(count($resultsMod) != 0){
+		$query = "UPDATE grocery_items SET brand = :brand, item_type = :item_type, price = :price WHERE food_id = :food_id";
+		$statement = $db->prepare($query);
+		$statement->bindValue(':brand',$brand);
+		$statement->bindValue(':item_type',$item_type);
+		$statement->bindValue(':price',$price);
+		$statement->bindValue(':food_id',$food_id);
+		$statement->execute();
+		$statement->closeCursor();
+	}else{
+		echo "You have to be a moderator to do this action!";
+	}
+   
+}
+
 function addFoodToList($id, $item_id){
 	//echo $id;
 	global $db;
