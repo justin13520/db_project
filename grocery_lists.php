@@ -34,6 +34,7 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
     <th width="10%">Cost</th>
     <th width="20%">Brand</th>
     <th width="10%">Quantity</th>
+    <th width="12%">Requested By</th>
     <th width="12%">Date Added</th>
     <th width="12%">Remove?</th>
   </tr>
@@ -77,6 +78,7 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
     foreach ($data as $food):  
     $food_data = getFoodGivenID($food['grocery_item_id']);
     $list_data = getInfoGivenID($food['list_id']);
+    $want_data = getWantGivenID($food['list_id']);
     ?>
     
     <tr>
@@ -84,6 +86,7 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
       <td><?php echo $food_data[0]['price']; ?></td>
       <td><?php echo $food_data[0]['brand']; ?></td>
       <td><?php echo $list_data[0]['quantity']; ?></td>
+      <td><?php echo $want_data; ?></td>
       <td><?php echo $list_data[0]['date_added']; ?></td>
       <td>
           <form action = "grocery_lists.php" method = "POST">
