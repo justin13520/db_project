@@ -82,7 +82,7 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
 
   <?php 
     foreach ($data as $food):  
-    $food_data = getFoodGivenID($food['grocery_item_id']);
+    $food_data = getFoodGivenID($food['food_id']);
     $list_data = getInfoGivenID($food['list_id']);
     $want_data = getWantGivenID($food['list_id']);
     $pay_data = getPayGivenID($food['list_id']);
