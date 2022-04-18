@@ -110,8 +110,26 @@ $list_of_foods_in_list = getAllFoodInList($_SESSION['id']);
       </td>
     </tr>
   <?php endforeach; ?>
-
   </table>
+
+
+  <hr/>
+
+  <table class="w3-table w3-bordered w3-card-4">
+    <thead>
+    <tr style="background-color:#B0B0B0">
+        <th width="20%">Total Bill Amount</th>
+    </tr>
+    </thead>
+
+    <?php 
+    $bill_amount = getBillAmountGivenID($_SESSION['id']);
+    ?>
+    <td>$<?php echo $bill_amount; ?></td>
+  </table>
+
+
+
 <!-- </div>   -->
 
 
