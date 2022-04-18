@@ -259,7 +259,7 @@ function addUser($name,$email,$google_id,$profile_image)
 
 	// execute the sql
 //	$statement = $db->query($query);   // query() will compile and execute the sql
-	echo "why not?";
+	//echo "why not?";
     $statement = $db->prepare($query);
     $statement->bindValue(':name',$name);
 	$statement->bindValue(':email',$email);
@@ -286,8 +286,8 @@ function getAllRoommateGroups()
 
 function makeRoommmateGroup($id,$group_name){
 	global $db;
-	echo $group_name;
-	echo $id;
+	//echo $group_name;
+	//echo $id;
 
 	$num_of_exist = "SELECT * FROM roommates WHERE group_name = :group_name";
 	$statement1 = $db->prepare($num_of_exist);
@@ -364,7 +364,7 @@ function num_of_user($google_id){
    $statement->execute();
    $result = $statement->fetch();
    $statement->closeCursor();
-   echo $result[0];
+   //echo $result[0];
    return $result[0];
 }
 //
@@ -436,16 +436,17 @@ function payItemFromList($list_id,$google_id){
 			$statementNewBill2->closeCursor();
 		}
 
-		$queryGetPrice = "SELECT price FROM grocery_items NATURAL JOIN items_in_list WHERE list_id = :list_id";
+		$queryGetPrice = "SELECT price, quantity FROM grocery_items NATURAL JOIN items_in_list NATURAL JOIN list_info WHERE list_id = :list_id";
 		$statementGetPrice = $db->prepare($queryGetPrice);
 		$statementGetPrice->bindValue(':list_id', $list_id);
 		$statementGetPrice->execute();
 		$resultGetPrice = $statementGetPrice->fetchAll();
 		$statementGetPrice->closeCursor();
 		
-		$queryBillUpdate = "UPDATE bill NATURAL JOIN pay_bill SET bill_amount = bill_amount + :amount WHERE google_id = :google_id";
+		$queryBillUpdate = "UPDATE bill NATURAL JOIN pay_bill SET bill_amount = bill_amount + :amount * :quantity WHERE google_id = :google_id";
 		$statementBillUpdate = $db->prepare($queryBillUpdate);
 		$statementBillUpdate->bindValue(':amount', $resultGetPrice[0][0]);
+		$statementBillUpdate->bindValue(':quantity', $resultGetPrice[0][1]);
 		$statementBillUpdate->bindValue(':google_id', $google_id);
 		$statementBillUpdate->execute();
 		$statementBillUpdate->closeCursor();
@@ -454,9 +455,29 @@ function payItemFromList($list_id,$google_id){
    }else{
 		echo "Someone is already paying for this item!";
    }
+}
 
+function getBillAmountGivenID($id){
+	global $db;
+	$querySearchBill = "SELECT * FROM pay_bill WHERE google_id = :google_id";
+	$statementSearchBill = $db->prepare($querySearchBill);
+	$statementSearchBill->bindValue(':google_id',$id);
+	$statementSearchBill->execute();
+	$resultSearchBill = $statementSearchBill->fetchAll();
+	$statementSearchBill->closeCursor();
 
-   
+	if(count($resultSearchBill) == 0){
+		return 0;
+	}else{
+		$queryBillUpdate = "SELECT bill_amount FROM bill NATURAL JOIN pay_bill WHERE google_id = :google_id";
+		$statementBillUpdate = $db->prepare($queryBillUpdate);
+		$statementBillUpdate->bindValue(':google_id', $id);
+		$statementBillUpdate->execute();
+		$resultBillUpdate = $statementBillUpdate->fetchAll();
+		$statementBillUpdate->closeCursor();
+
+		return $resultBillUpdate[0][0];
+	}
 }
 
 
